@@ -1,5 +1,7 @@
-﻿using Inox.Models;
+﻿using Inox.Authentication;
+using Inox.Models;
 using Inox.Models.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,7 @@ namespace Inox.Controllers
             return screen;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public ActionResult<Screen> PutScreens(int id, Screen screen)
         {
@@ -56,6 +59,7 @@ namespace Inox.Controllers
 
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public ActionResult<Screen> PostScreens(Screen screen)
         {
@@ -72,13 +76,14 @@ namespace Inox.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "This Screen already exists!" });
                 }
             }
 
             return CreatedAtAction("GetScreens", new { id = screen.ScreenId }, screen);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public IActionResult DeleteScreens(int id)
         {

@@ -2,13 +2,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IvHistory } from './IvHistory';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
-  private apiServer = "http://20.198.103.48:1019/api/vhistory";
+
+  private  apiServer = HostUrl + '/api/vhistory'
+  //private apiServer = "http://20.198.103.48:1019/api/vhistory";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'

@@ -57,6 +57,8 @@ namespace Inox
             services.AddTransient<IVTransactionHistory, VTransactionHistoryRepository>();
             services.AddTransient<IvSeat, VSeatRepository>();
             services.AddTransient<IvHistory, VHistoryRepository>();
+            services.AddTransient<IShowSeatPrices, ShowSeatPricesRepository>();
+            services.AddTransient<IVspPerticularShowSeatDetail, VspPerticularShowSeatDetailRepository>();
             services.AddControllers();
 
 

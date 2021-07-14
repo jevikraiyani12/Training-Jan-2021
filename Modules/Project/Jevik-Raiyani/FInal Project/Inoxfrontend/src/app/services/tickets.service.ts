@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { ITickets } from './ITickets';
 
 @Injectable({
@@ -9,7 +10,8 @@ import { ITickets } from './ITickets';
 })
 export class TicketsService {
 
-  private apiServer = "http://20.198.103.48:1019/api/ticket";
+  private  apiServer = HostUrl + '/api/ticket'
+ // private apiServer = "http://20.198.103.48:1019/api/ticket";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -33,9 +35,9 @@ export class TicketsService {
 
   create(product): Observable<ITickets> {
     return this.httpClient.post<ITickets>(this.apiServer , JSON.stringify(product), this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
+    // .pipe(
+    //   catchError(this.errorHandler)
+    // )
   }  
  
 

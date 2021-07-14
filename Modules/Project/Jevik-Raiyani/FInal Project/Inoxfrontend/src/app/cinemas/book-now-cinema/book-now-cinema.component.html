@@ -2,13 +2,13 @@
 
     <div class="row">
         <div class="card col-lg-3 p-2" style="border: none;">
-            <img class="card-img-top" src="../../assets/img/MovieImages/{{movieImages}}" alt="">
+            <img class="card-img-top" src="{{thisMovie?.movieImages}}" alt="">
             <p>Release Date: {{thisMovie?.releaseDate | date:'dd/MM/yyyy'}}</p>
             <p>Duration: {{thisMovie?.duration}} min </p>
             <p *ngIf='DateFlag'> Rating: {{thisMovie?.rationg}} </p>
         </div>
         <div class="card col-lg-9 p-2" style="border: none;">
-            <img class="card-img-top" src="../../assets/img/MovieTrailler/{{movieTrailer}}" alt="">
+            <img class="card-img-top" src="{{thisMovie?.movieTrailer}}" alt="">
 
             <div class="list-group list-group-horizontal" id="list-tab" role="tablist">
                 <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list"
@@ -41,27 +41,42 @@
 
             <div style="margin-top: 15px;">
                 <div class="container">
-                    <div *ngFor='let data of movieShow' style="padding: 12px;">
+                    <div>
+                        Select TimeSlot: <select name="time" size="" (change)="onSelecttime($event.target.value)">
+                            <option value="0" selected="selected">All</option>
+                            <option value="1">Morning (6:00am to 11:59pm)</option>
+                            <option value="2">Afternoon (12:00pm to 5:59pm)</option>
+                            <option value="3">Evening (6:00pm to 11:59am)</option>
+                            <option value="4">Other</option>
+                        </select>
+
+                    </div>
+                    <div *ngFor='let data of movieShowFinal' style="padding: 12px;">
                         <div class="row">
-                            <div class="col-md-9" >
-                                <div >
-                                Show Date & Time
-                                    {{data.date | date:'dd/MM/yyyy'}} {{data.startTime.hours}}:{{data.startTime.minutes}}
-                            
+                            <div class="col-md-9">
+
+
+
+                                <div>
+                                    Show Date & Time
+                                    {{data.date | date:'dd/MM/yyyy'}}
+                                    {{data.startTime.hours}}:{{data.startTime.minutes}}
+
                                     <br>
-                                    Screen no. {{data.screenNo}} & Capacity {{data.capacity}} 
-                            
+                                    Screen no. {{data.screenNo}} & Capacity {{data.capacity}}
+
                                     <br> Cinema Location
-                                                    {{data.cinemaName}} 
-                                                    {{data.cinemaAddress}}-{{data.cinemaPincode}}
-                                                    {{data.cinemaCity}}  
+                                    {{data.cinemaName}}
+                                    {{data.cinemaAddress}}-{{data.cinemaPincode}}
+                                    {{data.cinemaCity}}
                                 </div>
                             </div>
 
-                            <div class="col-md-3">   
-                                <button type="button" class="btn btn-success" [routerLink]="['../../../../../booknow/BookSeat',data.showTimeId]">Book Now</button>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-success"
+                                    [routerLink]="['../../../../../booknow/BookSeat',data.showTimeId]">Book Now</button>
                             </div>
-                             
+
 
                         </div>
                     </div>

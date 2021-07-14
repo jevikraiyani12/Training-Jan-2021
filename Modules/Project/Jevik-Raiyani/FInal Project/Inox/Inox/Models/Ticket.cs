@@ -14,10 +14,11 @@ namespace Inox.Models
         public string UserGmail { get; set; }
         public int PaymentId { get; set; }
         public string PaymentDetail { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         public virtual PaymentMethod Payment { get; set; }
         public virtual Seat Seat { get; set; }
         public virtual ShowTime ShowTime { get; set; }
+        //public virtual AspNetUser UserGmailNavigation { get; set; }
     }
 }

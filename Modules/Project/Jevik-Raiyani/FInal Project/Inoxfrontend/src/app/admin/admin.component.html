@@ -1,0 +1,58 @@
+<div class="admin container" *ngIf='AdminFlag'>
+    <p>admin works!</p>
+    <div class="form-check">
+        <div>
+            <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='1' type="radio"
+                name="flexRadioDisabled" checked>
+            <label class="form-check-label" for="">
+                Movie
+            </label>
+            <div *ngIf='checkFlag == 1'>
+                <button class="btn btn-primary"  [routerLink]="['movie',0]"> Add Movie</button>
+                <button class="btn btn-warning" [routerLink]="['movie',1]"> Edit Movie</button>
+            </div>
+        </div>
+        <div>
+            <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='2' type="radio"
+                name="flexRadioDisabled">
+            <label class="form-check-label" for="">
+                Cinema
+            </label>
+            <div *ngIf='checkFlag == 2'>
+                <button class="btn btn-primary"  [routerLink]="['cinema',0]" > Add Cinema</button>
+                <button class="btn btn-warning"  [routerLink]="['cinema',1]"> Edit Cinema</button>
+            </div>
+        </div>
+        <div>
+            <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='3' type="radio"
+                name="flexRadioDisabled">
+            <label class="form-check-label" for="">
+                Screen
+            </label>
+            <div *ngIf='checkFlag == 3'>
+                <button class="btn btn-primary"  [routerLink]="['screen']"> Add Screen</button>
+            </div>
+        </div>
+        <!-- <div>
+            <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='4' type="radio"
+                name="flexRadioDisabled">
+            <label class="form-check-label" for="">
+                All booked Tickets
+            </label>
+            <div *ngIf='checkFlag == 4'>
+                <button class="btn btn-primary"  [routerLink]="['history',0]"> See All Tickets </button>
+            </div>
+        </div>
+        <div>
+            <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='5' type="radio"
+                name="flexRadioDisabled">
+            <label class="form-check-label" for="">
+                Payment Method
+            </label>
+            <div *ngIf='checkFlag == 5'>
+                <button class="btn btn-primary"  [routerLink]="['paymentType',0]"> Add Payment Type </button>
+            </div>
+        </div> -->
+    </div>
+
+</div>

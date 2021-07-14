@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IShowTime } from './IShowTime';
 
 @Injectable({
@@ -9,7 +10,8 @@ import { IShowTime } from './IShowTime';
 })
 export class ShowTimmeService {
 
-  private apiServer = "http://20.198.103.48:1019/api/showtime";
+  private  apiServer = HostUrl + '/api/showtime'
+  //private apiServer = "http://20.198.103.48:1019/api/showtime";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'

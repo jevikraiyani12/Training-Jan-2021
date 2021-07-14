@@ -1,0 +1,1 @@
+export const HostUrl = 'http://20.198.103.48:1019' 

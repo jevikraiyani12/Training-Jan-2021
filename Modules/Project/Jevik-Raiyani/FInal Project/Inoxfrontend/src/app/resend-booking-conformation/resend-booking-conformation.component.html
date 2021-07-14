@@ -28,7 +28,7 @@
             <th>{{i.seatNo}}</th>
             <th>{{i.name}}</th>
             <th>{{i.price}}</th>
-            <button class="btn btn-danger my-2" (click)='cancelBooking(i.ticketId ,i.showDate )'>Cancel Booking</button>
+            <button class="btn btn-danger my-2" (click)='cancelBooking(i.ticketId ,i.showDate,i.startTime )'>Cancel Booking</button>
         </tbody>
     </table>
     <div *ngIf='History?.length==0'>

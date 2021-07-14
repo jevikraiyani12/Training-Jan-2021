@@ -18,7 +18,6 @@ namespace Inox.Models
             : base(options)
         {
         }
-
         public virtual DbSet<Cinema> Cinemas { get; set; }
         public virtual DbSet<DirectorCast> DirectorCasts { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
@@ -28,7 +27,8 @@ namespace Inox.Models
         public virtual DbSet<Screen> Screens { get; set; }
         public virtual DbSet<Seat> Seats { get; set; }
         public virtual DbSet<SeatType> SeatTypes { get; set; }
-        public virtual DbSet<ShowTime> ShowTimes { get; set; }
+        public virtual DbSet<ShowSeatPrice> ShowSeatPrices { get; set; }
+        public virtual DbSet<ShowTime> ShowTimes { get; set; } 
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserBookingHistory> UserBookingHistories { get; set; }
@@ -36,12 +36,13 @@ namespace Inox.Models
         public virtual DbSet<VCinemaScreen> VCinemaScreens { get; set; }
         public virtual DbSet<VHistory> VHistories { get; set; }
         public virtual DbSet<VSeat> VSeats { get; set; }
+        public virtual DbSet<VspPerticularShowSeatDetail> VspPerticularShowSeatDetails { get; set; }
 
 //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //        {
 //            if (!optionsBuilder.IsConfigured)
 //            {
-////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //                optionsBuilder.UseSqlServer("Data Source=DESKTOP-B3UT0RK\\SQLEXPRESS;Initial Catalog=InoxAuthentication;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 //            }
 //        }
@@ -50,7 +51,7 @@ namespace Inox.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
             base.OnModelCreating(modelBuilder);
-           
+
             modelBuilder.Entity<Cinema>(entity =>
             {
                 entity.ToTable("Cinema");
@@ -58,9 +59,7 @@ namespace Inox.Models
                 entity.HasIndex(e => new { e.CinemaName, e.CinemaAddress, e.CinemaPincode, e.CinemaCity, e.CinemaContactNo }, "Ukcinemaall")
                     .IsUnique();
 
-                entity.Property(e => e.CinemaId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("CinemaID");
+                entity.Property(e => e.CinemaId).HasColumnName("CinemaID");
 
                 entity.Property(e => e.CinemaAddress)
                     .IsRequired()
@@ -70,6 +69,10 @@ namespace Inox.Models
                 entity.Property(e => e.CinemaCity)
                     .IsRequired()
                     .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CinemaContactNo)
+                    .HasMaxLength(15)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CinemaName)
@@ -84,9 +87,7 @@ namespace Inox.Models
 
                 entity.ToTable("DirectorCast");
 
-                entity.Property(e => e.NameId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("NameID");
+                entity.Property(e => e.NameId).HasColumnName("NameID");
 
                 entity.Property(e => e.Gender)
                     .IsRequired()
@@ -101,12 +102,9 @@ namespace Inox.Models
 
             modelBuilder.Entity<Movie>(entity =>
             {
-                entity.Property(e => e.MovieId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("MovieID");
+                entity.Property(e => e.MovieId).HasColumnName("MovieID");
 
                 entity.Property(e => e.Descripton)
-                    .IsRequired()
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
@@ -115,9 +113,19 @@ namespace Inox.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MovieImages)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.MovieName)
                     .IsRequired()
                     .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MovieTrailer)
+                    .IsRequired()
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ReleaseDate).HasColumnType("date");
@@ -161,8 +169,6 @@ namespace Inox.Models
 
                 entity.ToTable("PaymentMethod");
 
-                entity.Property(e => e.PaymentId).ValueGeneratedNever();
-
                 entity.Property(e => e.PaymentMethod1)
                     .IsRequired()
                     .HasMaxLength(20)
@@ -174,8 +180,6 @@ namespace Inox.Models
             {
                 entity.HasIndex(e => new { e.RowNo, e.ScreenId }, "UkRowIDScreenID")
                     .IsUnique();
-
-                entity.Property(e => e.RowId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Screen)
                     .WithMany(p => p.Rows)
@@ -189,9 +193,7 @@ namespace Inox.Models
                 entity.HasIndex(e => new { e.CinemaId, e.ScreenNo }, "UkCinemaIDScreenNo")
                     .IsUnique();
 
-                entity.Property(e => e.ScreenId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ScreenID");
+                entity.Property(e => e.ScreenId).HasColumnName("ScreenID");
 
                 entity.Property(e => e.CinemaId).HasColumnName("CinemaID");
 
@@ -208,9 +210,7 @@ namespace Inox.Models
 
                 entity.HasIndex(e => e.SeatTypeId, "IX_Seats_SeatTypeID");
 
-                entity.Property(e => e.SeatId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("SeatID");
+                entity.Property(e => e.SeatId).HasColumnName("SeatID");
 
                 entity.Property(e => e.SeatTypeId).HasColumnName("SeatTypeID");
 
@@ -231,14 +231,38 @@ namespace Inox.Models
             {
                 entity.ToTable("SeatType");
 
-                entity.Property(e => e.SeatTypeId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("SeatTypeID");
+                entity.Property(e => e.SeatTypeId).HasColumnName("SeatTypeID");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ShowSeatPrice>(entity =>
+            {
+                entity.ToTable("ShowSeatPrice");
+
+                entity.HasIndex(e => new { e.ShowTimeId, e.SeatTypeId, e.Price }, "uk_ShowSeatPrice")
+                    .IsUnique();
+
+                entity.Property(e => e.ShowSeatPriceId).HasColumnName("ShowSeatPriceID");
+
+                entity.Property(e => e.SeatTypeId).HasColumnName("SeatTypeID");
+
+                entity.Property(e => e.ShowTimeId).HasColumnName("ShowTimeID");
+
+                entity.HasOne(d => d.SeatType)
+                    .WithMany(p => p.ShowSeatPrices)
+                    .HasForeignKey(d => d.SeatTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeatTypeID");
+
+                entity.HasOne(d => d.ShowTime)
+                    .WithMany(p => p.ShowSeatPrices)
+                    .HasForeignKey(d => d.ShowTimeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ShowTimeID");
             });
 
             modelBuilder.Entity<ShowTime>(entity =>
@@ -311,6 +335,13 @@ namespace Inox.Models
                     .HasForeignKey(d => d.ShowTimeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tickets_ShowTime");
+
+                //entity.HasOne(d => d.UserGmailNavigation)
+                //    .WithMany(p => p.Tickets)
+                //    .HasPrincipalKey(p => p.Email)
+                //    .HasForeignKey(d => d.UserGmail)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Tickets_AspNetUsers");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -401,6 +432,10 @@ namespace Inox.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CinemaContactNo)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CinemaName)
                     .IsRequired()
                     .HasMaxLength(30)
@@ -471,6 +506,30 @@ namespace Inox.Models
                 entity.Property(e => e.SeatId).HasColumnName("SeatID");
 
                 entity.Property(e => e.SeatTypeId).HasColumnName("SeatTypeID");
+            });
+
+            modelBuilder.Entity<VspPerticularShowSeatDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VspPerticularShowSeatDetail");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.Property(e => e.MovieId).HasColumnName("MovieID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ScreenId).HasColumnName("ScreenID");
+
+                entity.Property(e => e.SeatId).HasColumnName("SeatID");
+
+                entity.Property(e => e.SeatTypeId).HasColumnName("SeatTypeID");
+
+                entity.Property(e => e.ShowTimeId).HasColumnName("ShowTimeID");
             });
 
             OnModelCreatingPartial(modelBuilder);

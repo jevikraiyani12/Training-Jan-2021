@@ -4,7 +4,6 @@ import { AuthGuard } from './auth.guard';
 import { BookNowComponent } from './book-now/book-now.component';
 import { BookSeatComponent } from './book-seat/book-seat.component';
 import { UserDetailOfSeatComponent } from './book-seat/user-detail-of-seat/user-detail-of-seat.component';
-import { CinemasComponent } from './cinemas/cinemas.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
@@ -25,6 +24,8 @@ const routes: Routes = [
   { path: 'ResendBookingConformation', loadChildren: () => import('./resend-booking-conformation/resend-booking-conformation.module').then(m => m.ResendBookingConformationModule) },
 
   { path: 'cinemas', loadChildren: () => import('./cinemas/cinemas.module').then(m => m.CinemasModule) },
+
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: '**', component: PageNotFoundComponent }
 ];
 

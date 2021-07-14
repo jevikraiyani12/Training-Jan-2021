@@ -5,13 +5,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { IMovies } from './IMovies';
+import { HostUrl } from './HostUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
   
-  private apiServer = "http://20.198.103.48:1019/api/movies";
+  private apiServer = HostUrl + '/api/movies'
+  //private apiServer = "http://20.198.103.48:1019/api/movies";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -33,21 +35,21 @@ export class MoviesService {
   }
 
 
-  // create(product): Observable<IMovies> {
-  //   return this.httpClient.post<Product>(this.apiServer + '/products/', JSON.stringify(product), this.httpOptions)
-  //   .pipe(
-  //     catchError(this.errorHandler)
-  //   )
-  // }  
+  create(movie): Observable<IMovies> {
+    return this.httpClient.post<IMovies>(this.apiServer, JSON.stringify(movie), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }  
  
 
  
-  // update(id, product): Observable<Product> {
-  //   return this.httpClient.put<Product>(this.apiServer + '/products/' + id, JSON.stringify(product), this.httpOptions)
-  //   .pipe(
-  //     catchError(this.errorHandler)
-  //   )
-  // }
+  update(id, movie): Observable<IMovies> {
+    return this.httpClient.put<IMovies>(this.apiServer + '/' + id, JSON.stringify(movie), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
 
   // delete(id){
   //   return this.httpClient.delete<Product>(this.apiServer + '/products/' + id, this.httpOptions)

@@ -16,14 +16,14 @@
   <div class="form-check" *ngIf='cinemaAdmin && totalMovies'>
     <div>
       <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='add' type="radio"
-        name="flexRadioDisabled" id="flexRadioDisabled" [checked]='checkFlag'>
+        name="flexRadioDisabled" id="flexRadioDisabled" checked>
       <label class="form-check-label" for="flexRadioDisabled">
         Add Show
       </label>
     </div>
     <div>
       <input class="form-check-input" (change)="changeCheckbox($event.target.value)" value='delete' type="radio"
-        name="flexRadioDisabled" id="flexRadioDisabled" [checked]='!checkFlag'>
+        name="flexRadioDisabled" id="flexRadioDisabled">
       <label class="form-check-label" for="flexRadioDisabled">
         Delete Show
       </label>
@@ -34,7 +34,7 @@
   <div class="container" *ngIf='!cinemaAdmin '>
     <div class="row">
       <div *ngFor='let movie of Movies' class="card col-lg-3 p-2" style="border: none;">
-        <img class="card-img-top" src="../../assets/img/MovieImages/{{getMovieImages(movie.movieId)}}" alt="">
+        <img class="card-img-top" src="{{movie.movieImages}}" alt="">
         <h6 class="card-subtitle mt-2">{{movie.movieName}}</h6>
         <p class="my-0">{{movie.language}}</p>
         <hr class="my-0">
@@ -49,7 +49,7 @@
   <div class="container" *ngIf='cinemaAdmin && checkFlag && !addMovieId'>
     <div class="row">
       <div *ngFor='let movie of totalMovies' class="card col-lg-3 p-2" style="border: none;">
-        <img class="card-img-top" src="../../assets/img/MovieImages/{{getMovieImages(movie.movieId)}}" alt="">
+        <img class="card-img-top" src="{{movie.movieImages}}" alt="">
         <h6 class="card-subtitle mt-2">{{movie.movieName}}</h6>
         <p class="my-0">{{movie.language}}</p>
         <hr class="my-0">
@@ -63,13 +63,13 @@
 
       <div class="row">
         <div class="card col-lg-3 p-2" style="border: none;">
-          <img class="card-img-top" src="../../assets/img/MovieImages/{{movieImages}}" alt="">
+          <img class="card-img-top" src="{{thisMovie?.movieImages}}" alt="">
           <p>Release Date: {{thisMovie?.releaseDate | date:'dd/MM/yyyy'}}</p>
           <p>Duration: {{thisMovie?.duration}} min </p>
           <p *ngIf='DateFlag'> Rating: {{thisMovie?.rationg}} </p>
         </div>
         <div class="card col-lg-9 p-2" style="border: none;">
-          <img class="card-img-top" src="../../assets/img/MovieTrailler/{{movieTrailer}}" alt="">
+          <img class="card-img-top" src="{{thisMovie?.movieTrailer}}" alt="">
 
           <div class="list-group list-group-horizontal" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list"
@@ -114,10 +114,19 @@
         </div>
 
         <div class="form-group">
+            <div *ngFor='let i of SeatTypeMap | keyvalue'>
+              <label for="">Enter  {{SetTypeName(i.key)}} Seat Price</label>
+              <input type="number" value="{{i.value}}" (change)='onSetTypeMapChange(i.key,$event.target.value)'
+              class="form-control"  required>
+              {{i.value}}
+            </div>
+        </div>
+
+        <div class="form-group">
           <label for="date">Show Date</label>
           <input type="date" class="form-control" [ngModel]="date " (ngModelChange)="date = $event" name="date" required>
            {{date |date:'dd-MM-yyyy' }}
-        </div>
+        </div> 
  
         
         <div class="form-group">

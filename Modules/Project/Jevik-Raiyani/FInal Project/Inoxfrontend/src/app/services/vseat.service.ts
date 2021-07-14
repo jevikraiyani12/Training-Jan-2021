@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IvSeat } from './IvSeat';
 
 @Injectable({
@@ -9,7 +10,8 @@ import { IvSeat } from './IvSeat';
 })
 export class VSeatService {
 
-  private apiServer = "http://20.198.103.48:1019/api/vseat";
+  private  apiServer = HostUrl + '/api/vseat'
+ // private apiServer = "http://20.198.103.48:1019/api/vseat";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -23,8 +25,8 @@ export class VSeatService {
       catchError(this.errorHandler)
     )
   }
-  getById(id): Observable<IvSeat> {
-    return this.httpClient.get<IvSeat>(this.apiServer + '/' + id)
+  getById(id): Observable<IvSeat[]> {
+    return this.httpClient.get<IvSeat[]>(this.apiServer + '/' + id)
     .pipe(
       catchError(this.errorHandler)
     )

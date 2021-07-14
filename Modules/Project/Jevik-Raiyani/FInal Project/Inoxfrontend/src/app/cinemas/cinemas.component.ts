@@ -5,13 +5,13 @@ import { AuthService } from '../services/auth.service';
 import { CinemasService } from '../services/cinemas.service';
 import { IMovies } from '../services/IMovies';
 import { IvDirectorCast } from '../services/IvDirectorCast';
-import { MovieImages } from '../services/MovieImages';
 import { MoviesService } from '../services/movies.service';
-import { MovieTrailer } from '../services/MovieTrailer';
 import { ScreensService } from '../services/screens.service';
+import { ShowSeatPricesService } from '../services/show-seat-prices.service';
 import { ShowTimmeService } from '../services/show-timme.service';
 import { VCinemaScreenService } from '../services/v-cinema-screen.service';
 import { VDirectorCastService } from '../services/vdirector-cast.service';
+import { VSeatService } from '../services/vseat.service';
 
 @Component({
   selector: 'app-cinemas',
@@ -28,6 +28,7 @@ export class CinemasComponent implements OnInit {
   totalShowOfCinema
   perticularCinemaScreens
   AddscreenId: number
+  UniqueScreenSeatType
 
   thisMovieCast: IvDirectorCast[] = [];
   thisMovie: IMovies = null
@@ -36,8 +37,6 @@ export class CinemasComponent implements OnInit {
   checkFlag: boolean = true
   AddshowFlag: boolean = false
   DateFlag: boolean = false
-  movieImages;
-  movieTrailer;
 
   cinemaId: number
   CinemaCity: string
@@ -46,6 +45,7 @@ export class CinemasComponent implements OnInit {
   date: Date
   time: Date
   TotalScreenOfCinema
+  SeatTypeMap = new Map<number, number>();
 
   cinemaAdmin: boolean = false
 
@@ -55,11 +55,13 @@ export class CinemasComponent implements OnInit {
     private auth: AuthService,
     private showTimeService: ShowTimmeService,
     private screenServivce: ScreensService,
-    private movieCast: VDirectorCastService) { }
+    private movieCast: VDirectorCastService,
+    private vSeatService: VSeatService,
+    private showSeatPricesService: ShowSeatPricesService) { }
 
   ngOnInit(): void {
     this.auth.GmailVerificationCinemaAdmin(localStorage.getItem('userGmail')).subscribe(data => {
-      if (data.status = 'Success') {
+      if (data.status = 'Success') { 
         this.cinemaAdmin = true
         // console.log(this.cinemaAdmin)
       }
@@ -82,8 +84,6 @@ export class CinemasComponent implements OnInit {
       this.TotalScreenOfCinema = data
       //console.log(this.TotalScreenOfCinema)
     })
-
-
   }
 
   uniqueByKey(array, key) {
@@ -109,9 +109,9 @@ export class CinemasComponent implements OnInit {
     this.cinemaService.getAll().subscribe(data => {
 
       this.cinemaId = data.filter(x => x.cinemaCity === this.CinemaCity && x.cinemaName == name)[0].cinemaId
-     // console.log(this.cinemaId)
+      // console.log(this.cinemaId)
       this.perticularCinemaScreens = this.TotalScreenOfCinema.filter(x => x.cinemaId == this.cinemaId)
-     // console.log(this.perticularCinemaScreens)
+      // console.log(this.perticularCinemaScreens)
 
     })
 
@@ -165,9 +165,7 @@ export class CinemasComponent implements OnInit {
     )
   }
   AddShow(id) {
-    this.movieImages = MovieImages.get(id)
-    this.movieTrailer = MovieTrailer.get(id)
-    
+
     this.addMovieId = id
 
     this.moiveService.getById(id).subscribe((data: IMovies) => {
@@ -176,7 +174,7 @@ export class CinemasComponent implements OnInit {
       if (new Date().getTime() > new Date(this.thisMovie?.releaseDate).getTime()) {
         this.DateFlag = true;
       }
-     
+
 
       this.movieCast.getAll().subscribe(data => {
         this.thisMovieCast = data.filter(x => x.movieId == id)
@@ -186,19 +184,46 @@ export class CinemasComponent implements OnInit {
   }
   onSelectScreen(id) {
     this.AddscreenId = id
-    //console.log(this.AddscreenId)
+    this.vSeatService.getById(this.AddscreenId).subscribe(data => {
+      this.UniqueScreenSeatType = this.uniqueByKey(data, 'seatTypeId')
+      //console.log(this.UniqueScreenSeatType)
+
+      for (const i of this.UniqueScreenSeatType) {
+        this.SeatTypeMap.set(i.seatTypeId, 119.99)
+      }
+
+    })
+
+
+   // console.log(this.SeatTypeMap)
   }
+  SetTypeName(id) {
+    return this.UniqueScreenSeatType.filter(x => x.seatTypeId == id)[0].name
+  }
+  onSetTypeMapChange(id, val) {
+    this.SeatTypeMap.set(id, parseFloat(val))
+   // console.log(this.SeatTypeMap)
+  }
+
 
   back() {
     this.addMovieId = undefined
   }
 
   addNewShow() {
-   // console.log(this.AddscreenId)
+    // console.log(this.AddscreenId)
     if (this.AddscreenId == undefined) {
       alert('choose screen number')
       return
     }
+    for (const [key, value] of this.SeatTypeMap) {
+     if( value.toString() == NaN.toString()){
+      alert('Enter Price Of seat')
+      return
+     }
+    }
+
+
     if (this.date == undefined) {
       alert('Enter date')
       return
@@ -208,7 +233,7 @@ export class CinemasComponent implements OnInit {
       return
     }
 
-  if (new Date(new Date(this.date).toJSON().slice(0, 10).replace(/-/g, '/')).getTime()
+    if (new Date(new Date(this.date).toJSON().slice(0, 10).replace(/-/g, '/')).getTime()
       <= new Date(new Date(this.thisMovie.releaseDate).toJSON().slice(0, 10).replace(/-/g, '/')).getTime()) {
       alert('Show Date must be after release')
       return
@@ -236,12 +261,18 @@ export class CinemasComponent implements OnInit {
     //                         .setHours(parseInt( this.time.toString().slice(0,2))))
     //                         .setMinutes(  parseInt( this.time.toString().slice(3,5)) ))
 
+    if(parseInt(this.time.toString().slice(0, 2)) >= 0 && parseInt(this.time.toString().slice(0, 2)) <6 ){
+      alert('Your Show Hour Should be 6 to 23')
+      return
+    }
+
     if (new Date(new Date(this.date)
       .setHours(parseInt(this.time.toString().slice(0, 2))))
       .setMinutes(parseInt(this.time.toString().slice(3, 5)))
       <
       new Date().getTime() + 86400000) {
       alert('You can Create show that contain Datetime after 24hours from now')
+      return
     }
 
     this.showTimeService.create({
@@ -253,17 +284,24 @@ export class CinemasComponent implements OnInit {
         minutes: parseInt(this.time.toString().slice(3, 5))
       }
     }).subscribe(data => {
-      alert('Show Added')
-      window.location.reload();
+      for (const [key, value] of this.SeatTypeMap) {
+        this.showSeatPricesService.create({
+          showTimeId: data.showTimeId,
+          seatTypeId: key,
+          price: value
+        }).subscribe(data1 => {
+          alert('Show Added')
+          window.location.reload();
+        },
+          err1 => {
+            alert('ShowSeat Price not added yet');
+          }
+        )
+      }
     },
       err => {
         alert('already show on this Date Time & this Screen')
       }
     )
-  }
-
-
-  getMovieImages(id) {
-    return MovieImages.get(id)
   }
 }

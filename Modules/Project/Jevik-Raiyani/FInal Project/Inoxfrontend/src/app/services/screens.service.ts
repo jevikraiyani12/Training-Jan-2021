@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IScreens } from './IScreen';
 
 @Injectable({
@@ -9,7 +10,8 @@ import { IScreens } from './IScreen';
 })
 export class ScreensService {
 
-  private apiServer = "http://20.198.103.48:1019/api/Screens";
+  private  apiServer = HostUrl + '/api/Screens'
+ // private apiServer = "http://20.198.103.48:1019/api/Screens";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -31,12 +33,12 @@ export class ScreensService {
   // }
 
 
-  // create(product): Observable<IMovies> {
-  //   return this.httpClient.post<Product>(this.apiServer + '/products/', JSON.stringify(product), this.httpOptions)
-  //   .pipe(
-  //     catchError(this.errorHandler)
-  //   )
-  // }  
+  create(screen): Observable<IScreens> {
+    return this.httpClient.post<IScreens>(this.apiServer ,JSON.stringify(screen), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }  
  
 
  

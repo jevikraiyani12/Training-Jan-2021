@@ -56,6 +56,19 @@ namespace Inox.Controllers
             return Ok(new Response { Status = "Success" });
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpGet]
+        [Route("current-admin/{id}")]
+        public async Task<IActionResult> GetCurrentAdmin(string id)
+        {
+            // var user = userManager.Users.First(x => x.UserName == User.Identity.Name);
+            var userExists = await userManager.FindByEmailAsync(id);
+            if (userExists == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Email not  exists!" });
+
+            return Ok(new Response { Status = "Success" });
+        }
+
 
         [HttpPost]
         [Route("login")]

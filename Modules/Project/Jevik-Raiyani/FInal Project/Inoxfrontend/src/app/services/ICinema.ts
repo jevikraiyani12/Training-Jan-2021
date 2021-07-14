@@ -4,6 +4,6 @@ export interface ICinemas{
     cinemaAddress ?: string
     cinemaPincode ?: number
     cinemaCity?:string
-    cinemaContactNo?:number
+    cinemaContactNo?:string
     duration?:number
 }

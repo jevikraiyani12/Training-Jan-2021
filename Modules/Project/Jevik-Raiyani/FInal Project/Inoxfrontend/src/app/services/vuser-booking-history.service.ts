@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IvUserBookingHistory } from './IvUserBookingHistory';
 
 @Injectable({
@@ -9,7 +10,8 @@ import { IvUserBookingHistory } from './IvUserBookingHistory';
 })
 export class VUserBookingHistoryService {
 
-  private apiServer = "http://20.198.103.48:1019/api/UserBookingHistory";
+  private  apiServer = HostUrl + '/api/UserBookingHistory'
+  //private apiServer = "http://20.198.103.48:1019/api/UserBookingHistory";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'

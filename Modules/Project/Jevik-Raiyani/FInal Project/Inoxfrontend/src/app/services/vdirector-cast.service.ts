@@ -2,13 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 import { IvDirectorCast } from './IvDirectorCast';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VDirectorCastService {
-  private apiServer = "http://20.198.103.48:1019/api/VCastOfMovie";
+  private  apiServer = HostUrl + '/api/VCastOfMovie'
+  //private apiServer = "http://20.198.103.48:1019/api/VCastOfMovie";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'

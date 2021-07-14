@@ -79,7 +79,7 @@ namespace Inox.Controllers
                 }
                 else
                 {
-                    throw;
+                    return Conflict();
                 }
             }
 

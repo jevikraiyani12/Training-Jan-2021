@@ -2,13 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HostUrl } from './HostUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private _Url = "http://20.198.103.48:1019/api/authenticate";
+  private  _Url = HostUrl + '/api/authenticate'
+ // private _Url = "http://20.198.103.48:1019/api/authenticate";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json' 
@@ -37,6 +39,12 @@ export class AuthService {
 
   GmailVerificationCinemaAdmin(gmail):Observable<any>{
     return this.httpClient.get<any>(this._Url + '/current-cinemaadmin/' + gmail)
+    // .pipe(
+    //       catchError(this.errorHandler)
+    //     )
+  }
+  GmailVerificationAdmin(gmail):Observable<any>{
+    return this.httpClient.get<any>(this._Url + '/current-admin/' + gmail)
     // .pipe(
     //       catchError(this.errorHandler)
     //     )

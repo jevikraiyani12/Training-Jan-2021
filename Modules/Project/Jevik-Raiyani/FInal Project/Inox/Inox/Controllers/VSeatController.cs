@@ -26,18 +26,18 @@ namespace Inox.Controllers
             return _ivSeat.GetAll();
         }
 
-        //[HttpGet("{id}")]
-        //public ActionResult<VSeat> GetVseat(int id)
-        //{
-        //    var vSeat = _ivSeat.GetById(id);
+        [HttpGet("{id}")]
+        public IEnumerable<VSeat> GetVseat(int id)
+        {
+            var vSeat = _ivSeat.GetAll().Where(x=>x.ScreenId == id);
 
-        //    if (vSeat == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (vSeat == null)
+            {
+                return (IEnumerable<VSeat>)NotFound();
+            }
 
-        //    return vSeat;
-        //}
+            return vSeat;
+        }
 
         //[HttpPut("{id}")]
         //public ActionResult<UserBookingHistory> PutUserBookingHistories(int id, UserBookingHistory userBookingHistory)

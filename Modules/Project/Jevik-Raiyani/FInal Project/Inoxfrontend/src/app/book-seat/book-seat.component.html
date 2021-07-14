@@ -1,45 +1,65 @@
 <div class="bookSeat container">
 
     <div class="main">
-        <div class="Screen">Screen</div> 
+        <div class="Screen">Screen</div>
 
-        <div class="row my-2" *ngFor="let j of TotaRowId">
-            <!-- style="display: flex;justify-content: center;" -->
-            <div *ngFor="let i of TotalSeat; let idx = index;">
-                <div *ngIf='j == i.rowId' class="style">
-
-                    <!-- <div class="row"  *ngIf= 'idx!=0 && TotalSeat[idx-1].rowId != TotalSeat[idx].rowId'> <br>  </div> -->
-
-                    <div *ngIf='avalableSeatMap.get(i.seatId) == true'>
+        <div class="row my-2" *ngFor="let j of TotaRowNo">
+            <div>
+                <!-- {{j}} -->
+            </div>
+            
+            <div *ngFor="let i of ShowSeatArray; let idx = index;">
+                <div *ngIf='j == i.rowNo' class="style">
+                    <div *ngIf='i.flag == 0'>
                         <div>
-                            <input class="form-check-input"  [ngStyle]="{height:getHeight(i.seatTypeId)}"
-                                 type="checkbox" value="{{i.seatId}}"
-                                (change)="onSelect($event.target.value)">
+                            <input class="form-check-input" [ngStyle]="{height:getHeight(i.seatTypeId)}" type="checkbox"
+                                value="{{i.seatId}}" (change)="onSelect($event.target.value)">
                             <label class="form-check-label" [ngStyle]="{'padding-left':paddingleft(i.seatTypeId)}"
-                            for="flexCheckDisabled">
-                                {{i.seatNo}}
+                                for="flexCheckDisabled">
+                                <!-- {{i.seatNo}} -->
                             </label>
-
                         </div>
                     </div>
-
-                    <div *ngIf='avalableSeatMap.get(i.seatId) == false'>
+                    <div *ngIf='i.flag == 1'>
                         <div>
-
-                            <input class="form-check-input" [ngStyle]="{height:getHeight(i.seatTypeId)}"
-                             type="checkbox" checked disabled>
+                            <input class="form-check-input" [ngStyle]="{height:getHeight(i.seatTypeId)}" type="checkbox"
+                                checked disabled>
                             <label class="form-check-label" [ngStyle]="{'padding-left':paddingleft(i.seatTypeId)}"
-                            for="flexCheckCheckedDisabled">
-                                {{i.seatNo}}
+                                for="flexCheckCheckedDisabled">
+                                <!-- {{i.seatNo}} -->
                             </label>
-
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
-        <button  type="button" class="btn btn-success" (click)='book()' > Book </button>
+        <button type="button" class="btn btn-success mt-2" (click)='book()'> Book </button>
+    </div>
+    <div>
+
+        <table class="table table-borderless center">
+            <thead>
+                <tr>
+                    <th scope="col">SeatType</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">SeatIcon</th>
+                    <th scope="col">AvailableSeats</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let j of TotalAvailableSeatTypes">
+                    <th scope="row"> {{j.name}} Seat </th>
+                    <td> {{j.price}} </td>
+                    <td>
+                        <input class="form-check-input ml-2" [ngStyle]="{height:getHeight(j.seatTypeId)}"
+                            type="checkbox" disabled>
+                    </td>
+                    <td> {{AvaliableSeatForPerticularType(j.seatTypeId)}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
 </div>

@@ -44,6 +44,7 @@ namespace Inox.Controllers
             return cinema;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public ActionResult<Cinema> PutCinema(int id,Cinema cinema)
         {
@@ -60,6 +61,7 @@ namespace Inox.Controllers
   
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public ActionResult<Cinema> PostCinema(Cinema cinema)
         {
@@ -76,7 +78,8 @@ namespace Inox.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "This Cinema already exists!" });
+
                 }
             }
 

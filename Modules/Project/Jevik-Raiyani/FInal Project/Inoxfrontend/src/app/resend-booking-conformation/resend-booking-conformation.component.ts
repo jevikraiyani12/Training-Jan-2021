@@ -38,12 +38,14 @@ export class ResendBookingConformationComponent implements OnInit {
 
   }
 
-  cancelBooking(id, showDate) {
+  cancelBooking(id, showDate,startTime) {
 
-    if (new Date(showDate).getTime() < new Date().getTime()) {
-      alert('Not possible')
+    if(new Date(showDate).getTime() + new Date(startTime.totalMilliseconds).getTime() 
+    <= new Date().getTime() + 7200000){
+      alert('Not possible') 
       return
     }
+
     this.ticket.delete(id).subscribe(data => {
       alert('delete successfully You will get refund according our pilicy')
       window.location.reload()

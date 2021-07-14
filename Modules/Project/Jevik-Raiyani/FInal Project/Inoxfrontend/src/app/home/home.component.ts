@@ -1,6 +1,5 @@
 import { Component, OnInit} from '@angular/core';
 import { IMovies } from '../services/IMovies';
-import { MovieImages } from '../services/MovieImages';
 import { MoviesService } from '../services/movies.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -11,9 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   LocalMovies :IMovies[] = [];
-  
-
-  
+    
   
   constructor(private moiveService:MoviesService,
               private router:Router,
@@ -23,12 +20,9 @@ export class HomeComponent implements OnInit {
     this.moiveService.getAll().subscribe(data=>{
      this.LocalMovies = data
      .sort((a, b) => {
-      return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()}) ;
+      return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()}).slice(0,8) ;
       //console.log(this.LocalMovies);
     }) 
   } 
-  getMovieImages(id){
-    return MovieImages.get(id)
-  }
  
 }

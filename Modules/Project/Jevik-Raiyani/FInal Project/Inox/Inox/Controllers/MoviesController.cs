@@ -1,5 +1,7 @@
-﻿using Inox.Models;
+﻿using Inox.Authentication;
+using Inox.Models;
 using Inox.Models.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +44,7 @@ namespace Inox.Controllers
             return movie;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public ActionResult<Movie> PutMovie(int id, Movie movie)
         {
@@ -57,7 +60,7 @@ namespace Inox.Controllers
             return GetMovies(id);
 
         }
-
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public ActionResult<Movie> PostMovie(Movie movie)
         {
@@ -81,7 +84,7 @@ namespace Inox.Controllers
             return CreatedAtAction("GetMovies", new { id = movie.MovieId }, movie);
         }
 
-
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public IActionResult DeleteMovie(int id)
         {

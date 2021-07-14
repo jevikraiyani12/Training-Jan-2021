@@ -15,7 +15,7 @@ namespace Inox.Models
         public string CinemaAddress { get; set; }
         public string CinemaCity { get; set; }
         public int CinemaPincode { get; set; }
-        public int CinemaContactNo { get; set; }
+        public string CinemaContactNo { get; set; }
         public int ScreenId { get; set; }
         public int ScreenNo { get; set; }
         public int Capacity { get; set; }

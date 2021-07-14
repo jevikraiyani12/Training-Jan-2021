@@ -1,0 +1,113 @@
+<div class="movie container">
+    <div class="row" *ngIf='movieFlag == 0'>
+        <div class="col-md-6 offset-md-3">
+            <h3 *ngIf='!UpdateFlag'>Add Detail of Movie</h3>
+            <h3 *ngIf='UpdateFlag'>Update Detail of Movie</h3>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label>Movie Name</label>
+                    <input type="text" formControlName="movieName" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.movieName.errors }" />
+                    <div *ngIf="submitted && f.movieName.errors" class="invalid-feedback">
+                        <div *ngIf="f.movieName.errors.required">Movie Name is required</div>
+                        <div *ngIf="f.movieName.errors.minlength">Movie Name min length atleast 2 characters</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Release Date</label>
+                    <input type="date" formControlName="releaseDate" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.releaseDate.errors }" />
+                    <div *ngIf="submitted && f.releaseDate.errors" class="invalid-feedback">
+                        <div *ngIf="f.releaseDate.errors.required">Release Date is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Language</label>
+                    <input type="text" formControlName="language" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.language.errors }" />
+                    <div *ngIf="submitted && f.language.errors" class="invalid-feedback">
+                        <div *ngIf="f.language.errors.required">Language is required</div>
+                        <div *ngIf="f.language.errors.minlength">Language min length atleast 3 characters</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <input type="number" formControlName="rationg" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.rationg.errors }" />
+                    <div *ngIf="submitted && f.rationg.errors" class="invalid-feedback">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" formControlName="descripton" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.descripton.errors }" />
+                    <div *ngIf="submitted && f.descripton.errors" class="invalid-feedback">
+                        <div *ngIf="f.descripton.errors.minlength">Description min length atleast 15 characters</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input type="number" formControlName="duration" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" />
+                    <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
+                        <div *ngIf="f.duration.errors.required">Duration required</div>
+                        <div *ngIf="f.duration.errors.minlength">Duration min length atleast 2 numbers</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Movie Image Link</label>
+                    <input type="text" formControlName="movieImages" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.movieImages.errors }" />
+                    <div *ngIf="submitted && f.movieImages.errors" class="invalid-feedback">
+                        <div *ngIf="f.movieImages.errors.required">Movie Image Link is required</div>
+                        <div *ngIf="f.movieImages.errors.minlength">Movie Image Link min length atleast 10 characters
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Movie Trailer Link</label>
+                    <input type="text" formControlName="movieTrailer" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.movieTrailer.errors }" />
+                    <div *ngIf="submitted && f.movieTrailer.errors" class="invalid-feedback">
+                        <div *ngIf="f.movieTrailer.errors.required">Movie Trailer Link is required</div>
+                        <div *ngIf="f.movieTrailer.errors.minlength">Movie Trailer Link min length atleast 10 characters
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf='!UpdateFlag' class="form-group">
+                    <button class="btn btn-primary">Add Movie</button>
+                </div>
+                <div *ngIf='UpdateFlag' class="form-group">
+                    <button class="btn btn-warning" (click)='UpdateMovie()'>Update Movie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="" *ngIf='movieFlag == 1'>
+        <div class="">
+            <h3> Movie List</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Movie Name</th>
+                        <th>Language</th>
+                        <th>Release Date</th>
+                        <th>Duration</th>
+                        <th>Edit Button</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let i of TotalMovie; let idx= index;'>
+                        <td>{{i.movieName}} </td>
+                        <td> {{i.language}}</td>
+                        <td>{{i.releaseDate | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{i.duration}}</td>
+                        <td> <button class="btn btn-primary" (click)='setValueToForm(i)'>Edit</button> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

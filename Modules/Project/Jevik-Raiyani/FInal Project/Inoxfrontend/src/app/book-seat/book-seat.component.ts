@@ -1,10 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IVspPerticularShowSeatDetail } from '../services/IVspPerticularShowSeatDetail';
 import { TicketsService } from '../services/tickets.service';
-import { VCinemaScreenService } from '../services/v-cinema-screen.service';
-import { VSeatService } from '../services/vseat.service';
-import { VUserBookingHistoryService } from '../services/vuser-booking-history.service';
+import { VspPerticularShowSeatDetailService } from '../services/vsp-perticular-show-seat-detail.service';
 
 @Component({
   selector: 'app-book-seat',
@@ -13,75 +12,52 @@ import { VUserBookingHistoryService } from '../services/vuser-booking-history.se
 })
 export class BookSeatComponent implements OnInit {
 
-  ShowId: number
-  screenId: number
+  ShowSeatArray: IVspPerticularShowSeatDetail[] = []
+  TotaRowNo: number[] = []
 
-  TotalSeat
-  bookedSeat
-  AvaliableSeat
-
-  TotaRowId: number[] = []
+  ShowId: number 
   WantBook: number[] = []
 
-  avalableSeatMap = new Map<number, boolean>()
+  TotalAvailableSeat
+  TotalAvailableSeatTypes
+  AvailableSeatDataByType
 
   constructor(private route: ActivatedRoute,
-    private history: VUserBookingHistoryService,
-    private vSeat: VSeatService,
-    private vCinemaScreen: VCinemaScreenService,
-    private routenavigate:Router,
-    private ticket:TicketsService) { }
+    private routenavigate: Router,
+    private ticket: TicketsService,
+    private vspPerticularShowSeatDetailService: VspPerticularShowSeatDetailService) { }
 
   ngOnInit(): void {
     this.ShowId = parseInt(this.route.snapshot.paramMap.get('id'));
-   // console.log(this.ShowId)
+    // console.log(this.ShowId)
 
-    this.history.getAll().subscribe(data => {
-      this.bookedSeat = data.filter(x => x.showTimeId == this.ShowId);
-      // console.log(this.bookedSeat)
+    this.vspPerticularShowSeatDetailService.getById(this.ShowId).subscribe(data => {
+      this.ShowSeatArray = data
+      console.log(this.ShowSeatArray)
+      
+      this.TotalAvailableSeat = this.ShowSeatArray.filter(x=>x.flag == 0);
+      //console.log(this.TotalAvailableSeat)
 
-      for (const i of this.bookedSeat) {
-        this.avalableSeatMap.set(i.seatId, false);
+      this.TotalAvailableSeatTypes = this.uniqueByKey(this.TotalAvailableSeat,'seatTypeId')
+      //console.log(this.TotalAvailableSeatTypes)
+      if(this.TotalAvailableSeatTypes.length == 0){
+        alert('Show is full')
       }
-    })
-
-    this.vCinemaScreen.getAll().subscribe(data => {
-      this.screenId = data.filter(x => x.showTimeId == this.ShowId)[0].screenId
-    })
-
-    this.vSeat.getAll().subscribe(data => {
-      this.TotalSeat = data
-        .filter(x => x.screenId == this.screenId)
-        .sort((a, b) => { 
-          return a.seatNo - b.seatNo 
-        }).sort((a, b) => {
-          return  a.rowNo - b.rowNo
-
-        })
-      //console.log(this.cinemaId)
-      // console.log(this.TotalSeat) 
-
-      this.AvaliableSeat = data.filter(x => x.screenId == this.screenId)
-                          .filter(o1 =>!this.bookedSeat.find(o2 => o1.seatId === o2.seatId));
-    //  console.log(this.AvaliableSeat)
-
-      if(this.AvaliableSeat.length == 0){
-        alert('Screen is Full')
-      }
-
-      for (const j of this.AvaliableSeat) {
-        this.avalableSeatMap.set(j.seatId, true);
-      }
-
-      this.TotaRowId = this.TotalSeat.map(x => x.rowId)
+      
+      this.TotaRowNo = this.ShowSeatArray.map(x => x.rowNo)
         .filter((value, index, self) => self.indexOf(value) === index)
+      // console.log(this.TotaRowNo)
     })
-
-    //console.log(this.avalableSeatMap)
-
+  }
+  uniqueByKey(array, key) {
+    return [...new Map(array.map((x) => [x[key], x])).values()];
+  }
+  AvaliableSeatForPerticularType(seatTypeId){
+    return  this.TotalAvailableSeat.filter(x => x.seatTypeId == seatTypeId).length
   }
 
   onSelect(seatid) {
+    //console.log(seatid)
     let intSeatid = parseInt(seatid)
     this.WantBook.push(intSeatid)
 
@@ -89,43 +65,41 @@ export class BookSeatComponent implements OnInit {
 
       this.WantBook = this.WantBook.filter(x => x != intSeatid)
     }
-    //console.log(this.WantBook)
+     // console.log(this.WantBook)
 
   }
-  getHeight(id){
-    if(id==1){
+  getHeight(id) {
+    if (id == 1) {
       return '30px'
     }
-    if(id == 2){
+    if (id == 2) {
       return '40px'
     }
   }
-  paddingleft(id){
-    if(id==1){
+  paddingleft(id) {
+    if (id == 1) {
       return '15px'
     }
-    if(id == 2){
+    if (id == 2) {
       return '20px'
     }
   }
 
-  book() {  
+  book() {
     //console.log(this.WantBook.length)
-    if(this.WantBook.length == 0){
+    if (this.WantBook.length == 0) {
       alert('Select Seat')
       return;
     }
-    this.ticket.getAll().subscribe(res=>{
-      this.routenavigate.navigate(['booknow/BookSeat/UserDetail',this.ShowId,JSON.stringify(this.WantBook)])
-      },   
-      err=>{
-      if(err instanceof HttpErrorResponse){
-        if(err.status === 401){
-        return  this.routenavigate.navigate(['/login'])
+    this.ticket.getAll().subscribe(res => {
+      this.routenavigate.navigate(['booknow/BookSeat/UserDetail', this.ShowId, JSON.stringify(this.WantBook)])
+    },
+      err => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 401) {
+            return this.routenavigate.navigate(['/login'])
+          }
         }
-      }
-    })
-     
-
-    }
+      })
+  }
 }

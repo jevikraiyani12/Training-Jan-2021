@@ -1,0 +1,86 @@
+<div class="cinema container">
+    <div class="row" *ngIf='CinemaFlag == 0'>
+        <div class="col-md-6 offset-md-3">
+            <h3 *ngIf='!UpdateFlag'>Add Detail of Cinema</h3>
+            <h3 *ngIf='UpdateFlag'>Update Detail of Cinema</h3>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label>Cinema Name</label>
+                    <input type="text" formControlName="cinemaName" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.cinemaName.errors }" />
+                    <div *ngIf="submitted && f.cinemaName.errors" class="invalid-feedback">
+                        <div *ngIf="f.cinemaName.errors.required">Cinema Name is required</div>
+                        <div *ngIf="f.cinemaName.errors.minlength">Cinema Name min length atleast 3 characters</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cinema Address</label>
+                    <input type="text" formControlName="cinemaAddress" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.cinemaAddress.errors }" />
+                    <div *ngIf="submitted && f.cinemaAddress.errors" class="invalid-feedback">
+                        <div *ngIf="f.cinemaAddress.errors.required">Cinema Address is required</div>
+                        <div *ngIf="f.cinemaAddress.errors.minlength">Cinema Address  min length atleast 3 characters</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cinema Pincode</label>
+                    <input type="number" formControlName="cinemaPincode" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.cinemaPincode.errors }" />
+                    <div *ngIf="submitted && f.cinemaPincode.errors" class="invalid-feedback">
+                        <div *ngIf="f.cinemaPincode.errors.required"> Cinema Pincode is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cinema City</label>
+                    <input type="text" formControlName="cinemaCity" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.cinemaCity.errors }" />
+                    <div *ngIf="submitted && f.cinemaCity.errors" class="invalid-feedback">
+                        <div *ngIf="f.cinemaCity.errors.required">Cinema City required</div>
+                        <div *ngIf="f.cinemaCity.errors.minlength">Cinema City length atleast 3 numbers</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cinema Contact No</label>
+                    <input type="text" formControlName="cinemaContactNo" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.cinemaContactNo.errors }" />
+                    <div *ngIf="submitted && f.cinemaContactNo.errors" class="invalid-feedback">
+                       
+                    </div>
+                </div>
+                <div *ngIf='!UpdateFlag' class="form-group">
+                    <button class="btn btn-primary">Add Cinema</button>
+                </div>
+                <div *ngIf='UpdateFlag' class="form-group">
+                    <button class="btn btn-warning" (click)='UpdateCinema()'>Update Cinema</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="" *ngIf='CinemaFlag == 1'>
+        <div class="">
+            <h3> Cinema List</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Cinema Name</th>
+                        <th>Cinema Address</th>
+                        <th>Cinema Pincode</th>
+                        <th>Cinema City</th>
+                        <th>Edit Button</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let i of TotalCinema; let idx= index;'>
+                        <td>{{i.cinemaName}} </td>
+                        <td> {{i.cinemaAddress}}</td>
+                        <td>{{i.cinemaPincode}}</td>
+                        <td>{{i.cinemaCity}}</td>
+                        <td> <button class="btn btn-primary" (click)='setValueToForm(i)'>Edit</button> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

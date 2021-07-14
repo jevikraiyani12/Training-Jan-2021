@@ -6,4 +6,6 @@ export interface IMovies{
     rationg?:number
     descripton?:string
     duration?:number
+    movieImages?:string
+    movieTrailer?:string
 }

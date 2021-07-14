@@ -1,0 +1,100 @@
+<div class="screen container">
+    <div *ngIf='!Flag'>
+        <h3> Cinema List</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Cinema Name</th>
+                    <th>Cinema Address</th>
+                    <th>Cinema Pincode</th>
+                    <th>Cinema City</th>
+                    <th>Edit Button</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let i of TotalCinema; let idx= index;'>
+                    <td>{{i.cinemaName}} </td>
+                    <td> {{i.cinemaAddress}}</td>
+                    <td>{{i.cinemaPincode}}</td>
+                    <td>{{i.cinemaCity}}</td>
+                    <td> <button class="btn btn-primary" (click)='setValueToForm(i.cinemaId)'>Add Screen</button> </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row" *ngIf='Flag'>
+        <div class="col-md-6 offset-md-3">
+            <h3>Not Working</h3>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label>Screen Number</label>
+                    <input type="number" formControlName="screenNo" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.screenNo.errors }" />
+                    <div *ngIf="submitted && f.screenNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.screenNo.errors.required">Screen Number is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Capacity </label>
+                    <input type="number" formControlName="capacity" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.capacity.errors }" />
+                    <div *ngIf="submitted && f.capacity.errors" class="invalid-feedback">
+                        <div *ngIf="f.capacity.errors.required">Capacity is required</div>
+                    </div>
+                </div>
+
+
+                <div *ngFor="let row of rows().controls; let rowIndex=index">
+                    <div [formGroupName]="rowIndex">
+                        <div class="form-group">
+                            <label for=""> {{rowIndex+1}}) Enter Row No</label>
+                            <input type="number" class="form-control" formControlName="rawNo" />
+                            <button class="btn btn-danger" (click)="removeRow(rowIndex)">Remove row</button>
+                        </div>
+
+                        <div formArrayName="seats">
+                            <div *ngFor="let seat of rowSeats(rowIndex).controls; let seatIndex=index">
+                                <div [formGroupName]="seatIndex">
+
+                                    <div>
+                                        <div class="form-group">
+                                            <label for=""> {{seatIndex+1}})  Seat No :</label>
+                                            <input type="number" class="form-control" formControlName="seatNo" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>SeatType</label>
+                                            <div class="">
+                                                <select name="" size="" formControlName="seatTypeId"
+                                                    class="form-control">
+                                                    <option value="1" selected="selected">Normal Seat</option>
+                                                    <option value="2">Sofa Seat</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-danger" (click)="removeRowSeat(rowIndex,seatIndex)">
+                                            Remove seat
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="button" (click)="addRowSeat(rowIndex)">
+                            Add Seat
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="button" (click)="addRow()">Add Row</button>
+
+
+                <div class="form-group">
+                    <button class="btn btn-success">Add Cinema</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+
+</div>
